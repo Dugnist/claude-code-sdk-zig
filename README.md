@@ -1,5 +1,3 @@
-[![Stand With Ukraine](https://raw.githubusercontent.com/vshymanskyy/StandWithUkraine/main/banner2-direct.svg)](https://vshymanskyy.github.io/StandWithUkraine/)
-
 # claude-code-sdk-zig
 
 Unofficial Zig SDK for [Claude Code](https://docs.anthropic.com/en/docs/claude-code/overview) — spawn and communicate with the `claude` CLI as a managed subprocess.
@@ -227,3 +225,5 @@ The flow test in `example/flow-test.zig` exercises the full session lifecycle: s
 ## License
 
 claude-code-sdk-zig is licensed under the MIT license. See [`LICENSE`](LICENSE) for details.
+
+[![Stand With Ukraine](https://raw.githubusercontent.com/vshymanskyy/StandWithUkraine/main/banner2-direct.svg)](https://vshymanskyy.github.io/StandWithUkraine/)
