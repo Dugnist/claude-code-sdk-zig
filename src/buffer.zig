@@ -152,8 +152,23 @@ pub const ReadBuffer = struct {
             const remove_count = newline_idx + 1;
             const bytes_to_keep = self.len - remove_count;
 
-            // Backup the line at the END of the buffer
+            // Backup the line at the END of the buffer.
+            // Ensure capacity for the backup (self.len + line.len may exceed capacity
+            // when the buffer is full or nearly full).
             const line_backup_start = self.len;
+            const needed = line_backup_start + line.len;
+            if (needed > self.capacity) {
+                var new_capacity = self.capacity * 2;
+                while (new_capacity < needed) {
+                    new_capacity *= 2;
+                }
+                const new_buffer = self.allocator.realloc(self.buffer, new_capacity) catch return null;
+                self.buffer = new_buffer;
+                self.capacity = new_capacity;
+                // Re-derive line slice — realloc may have moved the buffer
+                line = self.buffer[0..line_end];
+            }
+
             for (0..line.len) |i| {
                 self.buffer[line_backup_start + i] = line[i];
             }
@@ -246,4 +261,21 @@ test "ReadBuffer skips empty lines" {
     const line2 = buffer.drain();
     try std.testing.expect(line2 != null);
     try std.testing.expectEqualStrings("line2", line2.?);
+}
+
+test "ReadBuffer drain does not panic when buffer is at capacity" {
+    var buffer = ReadBuffer.init(std.testing.allocator);
+    defer buffer.deinit();
+
+    // Fill buffer exactly to initial capacity (8192) with a single line + \n.
+    // This triggers the backup-at-end path where line_backup_start == self.len == capacity.
+    const line_len = 8191; // + 1 for \n = 8192 = initial capacity
+    const big_line = "A" ** line_len;
+    try buffer.append(big_line ++ "\n");
+    try std.testing.expectEqual(@as(usize, 8192), buffer.len);
+
+    const result = buffer.drain();
+    try std.testing.expect(result != null);
+    try std.testing.expectEqual(@as(usize, line_len), result.?.len);
+    try std.testing.expectEqualStrings(big_line, result.?);
 }
