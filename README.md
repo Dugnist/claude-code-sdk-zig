@@ -12,7 +12,7 @@ Two modes are supported: a one-shot `query()` for scripts and automation, and a 
 
 ## Requirements
 
-- Zig `0.16.0-dev.2637+6a9510c0e` or newer
+- Zig `0.16.0-dev.2821+3edaef9e0` or newer (latest tested)
 - The `claude` CLI installed and available in `PATH` (standalone binary or npm/bun global install)
 - A valid Anthropic authentication — run `claude` once interactively to authenticate
 

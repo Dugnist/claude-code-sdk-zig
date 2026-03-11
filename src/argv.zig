@@ -115,7 +115,7 @@ pub fn buildQueryArgv(
     prompt: []const u8,
     opts: options.QueryOptions,
 ) !ArgvResult {
-    var argv = std.ArrayList([]const u8){};
+    var argv = std.ArrayList([]const u8).empty;
     errdefer freeList(allocator, &argv);
 
     try appendCommonArgs(allocator, &argv, binary, false, opts.model, opts.system_prompt, opts.allowed_tools, opts.disallowed_tools, opts.permission_mode, opts.max_turns, opts.resume_session, opts.continue_conversation, opts.verbose, opts.add_dirs);
@@ -142,7 +142,7 @@ pub fn buildSessionArgv(
     binary: []const u8,
     opts: options.SessionOptions,
 ) !ArgvResult {
-    var argv = std.ArrayList([]const u8){};
+    var argv = std.ArrayList([]const u8).empty;
     errdefer freeList(allocator, &argv);
 
     try appendCommonArgs(allocator, &argv, binary, true, opts.model, opts.system_prompt, opts.allowed_tools, opts.disallowed_tools, opts.permission_mode, opts.max_turns, opts.resume_session, opts.continue_conversation, opts.verbose, opts.add_dirs);
